@@ -56,7 +56,8 @@ public class CarMove : MonoBehaviour
 
     public void ButtonLeftDown()
     {
-        leftButton = true;
+        if (playing)
+            leftButton = true;
     }
     public void ButtonLeftUp()
     {
@@ -64,7 +65,8 @@ public class CarMove : MonoBehaviour
     }
     public void ButtonRightDown()
     {
-        rightButton = true;
+        if (playing)
+            rightButton = true;
     }
     public void ButtonRightUp()
     {
