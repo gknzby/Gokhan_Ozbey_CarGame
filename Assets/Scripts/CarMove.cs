@@ -54,12 +54,20 @@ public class CarMove : MonoBehaviour
         }
     }
 
-    public void ButtonLeft()
+    public void ButtonLeftDown()
     {
-        leftButton = !leftButton;
+        leftButton = true;
     }
-    public void ButtonRight()
+    public void ButtonLeftUp()
     {
-        rightButton = !rightButton;
+        leftButton = false;
+    }
+    public void ButtonRightDown()
+    {
+        rightButton = true;
+    }
+    public void ButtonRightUp()
+    {
+        rightButton = false;
     }
 }
