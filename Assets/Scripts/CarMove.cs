@@ -28,30 +28,43 @@ public class CarMove : MonoBehaviour
 
     }
 
+    public void Reset() {
+        carRot.x = 0;
+        carRot.y = 0;
+        carBody.velocity = carRot;
+    }
+
     // Update is called once per frame
-    void FixedUpdate()
-    {
+    void Update() {
+        
+        leftButton = Input.GetKey(KeyCode.LeftArrow);
+        rightButton = Input.GetKey(KeyCode.RightArrow);
+        
         if(playing)
         {
-            rotZ = transform.eulerAngles.z;
-            carRot.x = Mathf.Cos(rotZ * Mathf.PI / 180);
-            carRot.y = Mathf.Sin(rotZ * Mathf.PI / 180);
-            carBody.velocity = carRot * carSpeed;
+            // rotZ = transform.eulerAngles.z;
+            // carRot.x = Mathf.Cos(rotZ * Mathf.PI / 180);
+            // carRot.y = Mathf.Sin(rotZ * Mathf.PI / 180);
+            
+            
+            carBody.velocity = transform.right * carSpeed;
+
+            // Quaternion.Lerp(transform.rotation, rotationSpeed);
+            
             if(leftButton)
             {
-                transform.eulerAngles = new Vector3(0, 0, rotZ + rotationSpeed);
+                transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+
+                // transform.eulerAngles = new Vector3(0, 0, rotZ + ());
             }
             if(rightButton)
             {
-                transform.eulerAngles = new Vector3(0, 0, rotZ - rotationSpeed);
+                transform.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
+
+                // transform.eulerAngles = new Vector3(0, 0, rotZ - (rotationSpeed * Time.deltaTime));
             }
         }
-        else
-        {
-            carRot.x = 0;
-            carRot.y = 0;
-            carBody.velocity = carRot;
-        }
+
     }
 
     public void ButtonLeftDown()

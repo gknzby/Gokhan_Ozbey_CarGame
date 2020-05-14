@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     List<GameObject> botCars;
     List<Vector2> locations;
-    List<float> rotations;
+    List<Quaternion> rotations;
 
     public int currentLevel;
     float recordTime = 0;
@@ -23,14 +23,16 @@ public class GameManager : MonoBehaviour
     bool playing = false;
     float timer = 0;
     float oldTimer = 0;
-    
+
+    public LayerMask exitMask;
+    public CarMove carMove;
     
     void Start()
     {
         botCars = new List<GameObject>();
         transform.position = startPoints[0].transform.position;
         locations = new List<Vector2>();
-        rotations = new List<float>();
+        rotations = new List<Quaternion>();
 
         carCount = endPoints.Count;
         for (int i = 1; i < carCount; i++)
@@ -45,17 +47,22 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
+            StartGame();
+        }
+        
         if(playing)
         {
-            timer += Time.deltaTime;
-            timerTxt.text = timer.ToString();
+            // timer += Time.deltaTime;
+            // timerTxt.text = timer.ToString();
 
             recordTime += Time.deltaTime;
             if (recordTime > 0.05)
             {
                 locations.Add(new Vector2(transform.position.x, transform.position.y));
-                rotations.Add(transform.eulerAngles.z);
-                recordTime = 0;
+                // rotations.Add(transform.eulerAngles.z);
+                rotations.Add(transform.rotation);
+                recordTime -= 0.05f;
             }
         }
         else
@@ -73,6 +80,11 @@ public class GameManager : MonoBehaviour
         {
             botCars[i].GetComponent<BotCarMove>().playing = false;
         }
+
+        if (collision.IsTouchingLayers(exitMask)) {
+            Debug.Log("asdasd");
+        }
+        
         if (collision.CompareTag("Exit"))
         {
             //next turn
@@ -90,9 +102,10 @@ public class GameManager : MonoBehaviour
 
             locations.Clear();
             rotations.Clear();
-
-            transform.position = startPoints[turnCounter].transform.position;
-            transform.rotation = startPoints[turnCounter].transform.rotation;
+            
+            var tr = transform;
+            tr.position = startPoints[turnCounter].transform.position;
+            tr.rotation = startPoints[turnCounter].transform.rotation;
 
             endPoints[turnCounter - 1].tag = "Passive";
             startPoints[turnCounter - 1].GetComponentInChildren<SpriteRenderer>().enabled = false;
@@ -114,6 +127,8 @@ public class GameManager : MonoBehaviour
             rotations.Clear();
 
             timer = oldTimer;
+            
+            carMove.Reset();
         }
 
     }
